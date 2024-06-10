@@ -1,17 +1,19 @@
 import React from 'react';
 import './Navbar.css';
+import { Link } from 'react-router-dom'; // Make sure to import Link
 
 const Navbar: React.FC = () => {
     return (
         <nav className="navbar">
             <div className="container">
-                <a className="logo active" aria-current="page" href="/">Crises Response Management</a>
+                <Link to="/" className="logo active" aria-current="page">Crises Response Management</Link>
                 <ul className="nav-links">
-                    <li><a href="/">Home</a></li>
-                    <li><a href="/incident-reporting">Incident Reporting</a></li>
-                    <li><a href="/collaboration">Collaboration</a></li>
-                    <li><a href="/communication-center">Communication Center</a></li>
-                    <li><a href="/about">About</a></li> {/* Removed "pages/" */}
+
+                    <li><Link to="/">Home</Link></li>
+                    <li><Link to="/report-incident">Incident Reporting</Link></li>
+                    <li><Link to="/collaborate">Collaboration</Link></li>
+                    <li><Link to="/contact">Communication Center</Link></li>
+                    <li><Link to="/about-us">About</Link></li>
                 </ul>
             </div>
         </nav>

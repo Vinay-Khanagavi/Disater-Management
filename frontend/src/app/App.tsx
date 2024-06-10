@@ -1,7 +1,5 @@
 import React, { useState, useEffect } from 'react';
 import './App.css';
-import VerticalContainer from '../vertical-container/VerticalContainer';
-import CreateContentBox from '../content-box/CreateContentBox';
 import ReadContentBox from '../content-box/ReadContentBox';
 import UpdateContentBox from '../content-box/UpdateContentBox';
 import { DisasterEvent } from '../entities/DisasterEvent';
@@ -11,7 +9,8 @@ import IncidentReportingPage from "../pages/IncidentReportingPage";
 import CollaborationPage from "../pages/CollaborationPage";
 import CommunicationCenterPage from "../pages/CommunicationCenterPage";
 import AboutPage from "../pages/AboutPage";
-import Navbar from "../components/Navbar";// Import DisasterEvent from here
+import Navbar from "../components/Navbar";// Import DisasterEvent from
+import { Link } from 'react-router-dom';
 
 
 
