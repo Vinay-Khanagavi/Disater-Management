@@ -1,10 +1,91 @@
-/* Your styles goes here. */
-.main-component {
-    display: table;
-    width: 100%;
+/* Overall Application Styles */
+body {
+    font-family: 'Roboto', sans-serif;  /* Modern, clean font choice */
+    line-height: 1.6;
+    margin: 0;
+    background-color: #f0f0f5;          /* Softer, neutral background */
+    min-height: 100vh;                 /* Full viewport height */
+    display: flex;                    /* Enable flexbox layout */
+    flex-direction: column;            /* Arrange items vertically */
 }
 
-.main-component > div {
-    display: table-cell;
-    width: 25%;
+.app-container {
+    flex: 1;                         /* Allow content to fill available space */
+    max-width: 1200px;                 /* Widen container for larger screens */
+    margin: 20px auto;
+    padding: 20px;
+    background-color: #fff;
+    border-radius: 8px;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.15); /* Deeper shadow */
+}
+
+/* Input Area Styles */
+.content-box {
+    padding: 30px;                      /* More padding for better visuals */
+    border: 1px solid #e0e0e5;          /* Slightly lighter border */
+    margin-bottom: 30px;
+    border-radius: 10px;
+    background-color: white;          /* Solid white background */
+    width: 45%;                       /* Adjust width as per your requirement */
+    align-self: center;              /* Center the content box horizontally */
+}
+
+.content-box h2 {
+    color: #333;                       /* Darker heading color */
+    margin-top: 0;
+    margin-bottom: 20px;
+}
+
+.content-box input[type="text"],
+.content-box input[type="date"],
+.content-box select,
+.content-box textarea {
+    width: calc(100% - 24px);          /* Adjust for padding */
+    padding: 12px;
+    margin-bottom: 15px;
+    border: 1px solid #e0e0e5;
+    border-radius: 5px;
+    box-sizing: border-box;
+}
+
+/* ... (rest of input field styles) ... */
+
+.content-box button {
+    background-color: #ff4500;  /* Vibrant orange (or use your crisis theme color) */
+    color: white;
+    padding: 12px 25px;        /* Slightly larger padding */
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    font-size: 18px;          /* Bigger font */
+    transition: background-color 0.2s ease;
+}
+
+/* Event List Styles */
+.event-list {
+    margin-top: 30px;
+    display: flex;                   /* Enable flexbox for event list */
+    flex-wrap: wrap;                 /* Allow items to wrap */
+    gap: 20px;                       /* Add space between items */
+    justify-content: space-around; /* Center items on the main axis */
+}
+
+.event-list li {
+    background-color: #fff;
+    padding: 20px;
+    margin-bottom: 10px;
+    border-radius: 8px;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+    flex: 1 1 300px; /* Each item takes at least 300px and can grow */
+}
+
+/* ... rest of the styles ... */
+
+/* Error Message Styles */
+.error-message {
+    color: #ff0000; /* Red error message */
+    padding: 10px;
+    border-radius: 5px;
+    background-color: #f8d7da;
+    margin-bottom: 10px;
 }

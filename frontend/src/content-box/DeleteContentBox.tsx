@@ -1,34 +1,36 @@
 import React from 'react';
-
 import './ContentBox.css';
-
-import {GymRecord} from '../entities/GymRecord';
+import { DisasterEvent } from '../entities/DisasterEvent';
 
 interface ContentBoxProps {
     onSubmit: (id: number) => void;
-    content: GymRecord;
+    event: DisasterEvent;
 }
 
-const DeleteContentBox: React.FC<ContentBoxProps> = ({ onSubmit, content }) => {
-    const [record, setRecord] = React.useState<GymRecord>(content);
+const DeleteContentBox: React.FC<ContentBoxProps> = ({ onSubmit, event }) => {
 
-    const formatDate = (dateStr: string) => {
-        const date = new Date(dateStr);
+    const formatDate = (date: Date): string => {
         const year = date.getFullYear();
         const month = String(date.getMonth() + 1).padStart(2, '0');
         const day = String(date.getDate()).padStart(2, '0');
-        return `${year}/${month}/${day}`;
+        return `${year}-${month}-${day}`;
     };
 
     const handleSubmit = () => {
-        onSubmit(record.id);
+        onSubmit(event.id);
     };
 
     return (
         <div className="content-box">
-            <p>Exercise: {record.exercise}</p>
-            <p>Weight: {record.weight} kg</p>
-            <p>When: {formatDate(record.date)}</p>
+            {/* Display disaster event details */}
+            <p>Name of the Disaster: {event.name}</p>
+            <p>Type: {event.type}</p>
+            <p>Reporter Name: {event.name}</p>
+            <p>Address: {event.address}</p>
+            <p>Date: {formatDate(event.date)}</p>
+            <p>Severity: {event.severityLevel}</p>
+            <p>Description: {event.description}</p>
+
             <button onClick={handleSubmit}>Delete</button>
         </div>
     );
