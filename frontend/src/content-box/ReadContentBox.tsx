@@ -1,37 +1,33 @@
 import React from 'react';
 import './ContentBox.css';
-import { DisasterEvent } from '../entities/DisasterEvent';
+import { Student } from '../entities/Student';
 
 interface ReadContentBoxProps {
-    event: DisasterEvent;
+    student: Student;  // Change from 'event' to 'student'
     onEdit: () => void;
     onDelete: () => void;
 }
 
-const ReadContentBox: React.FC<ReadContentBoxProps> = ({ event, onEdit, onDelete }) => {
-    const formatDate = (dateString: Date): string => {
-        if (!dateString) return "Invalid Date";
-        const date = new Date(dateString);
+const ReadContentBox: React.FC<ReadContentBoxProps> = ({ student, onEdit, onDelete }) => {
 
-        if (isNaN(date.getTime())) { // Check if the date is valid
-            return 'Invalid Date'; // or some other error message
-        }
-
+    const formatDate = (date: Date): string => {
         const year = date.getFullYear();
-        const month = String(date.getMonth() + 1).padStart(2, '0'); // getMonth() is 0-indexed
+        const month = String(date.getMonth() + 1).padStart(2, '0');
         const day = String(date.getDate()).padStart(2, '0');
         return `${year}-${month}-${day}`;
     };
 
-
     return (
         <div className="content-box">
-            <p>Name of the Disaster: {event.name}</p>
-            <p>Type: {event.type}</p>
-            <p>Location: {event.address}</p>
-            <p>Date: {formatDate(event.date)}</p>
-            <p>Severity: {event.severityLevel}</p>
-            <p>Description: {event.description}</p>
+            {/* Display student details */}
+            <p>Name: {student.name}</p>
+            <p>Roll Number: {student.rollNumber}</p>
+            <p>Department: {student.department}</p>
+            <p>Batch: {student.batch}</p>
+            <p>Date of Joining: {formatDate(student.dateOfJoining)}</p>
+            <p>Contact Information: {student.contactInfo}</p>
+            <p>Total Attendance: {student.totalAttendance}</p> {/* Display total attendance */}
+
             {/* Edit and Delete Buttons */}
             <button onClick={onEdit}>Edit</button>
             <button onClick={onDelete}>Delete</button>
@@ -40,4 +36,3 @@ const ReadContentBox: React.FC<ReadContentBoxProps> = ({ event, onEdit, onDelete
 };
 
 export default ReadContentBox;
-

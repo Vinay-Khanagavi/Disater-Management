@@ -1,13 +1,13 @@
 import React from 'react';
 import './ContentBox.css';
-import { DisasterEvent } from '../entities/DisasterEvent';
+import { Student } from '../entities/Student';
 
 interface ContentBoxProps {
     onSubmit: (id: number) => void;
-    event: DisasterEvent;
+    student: Student;  // Change from 'event' to 'student'
 }
 
-const DeleteContentBox: React.FC<ContentBoxProps> = ({ onSubmit, event }) => {
+const DeleteContentBox: React.FC<ContentBoxProps> = ({ onSubmit, student }) => { // Change from 'event' to 'student'
 
     const formatDate = (date: Date): string => {
         const year = date.getFullYear();
@@ -17,19 +17,18 @@ const DeleteContentBox: React.FC<ContentBoxProps> = ({ onSubmit, event }) => {
     };
 
     const handleSubmit = () => {
-        onSubmit(event.id);
+        onSubmit(student.id);
     };
 
     return (
         <div className="content-box">
-            {/* Display disaster event details */}
-            <p>Name of the Disaster: {event.name}</p>
-            <p>Type: {event.type}</p>
-            <p>Reporter Name: {event.name}</p>
-            <p>Address: {event.address}</p>
-            <p>Date: {formatDate(event.date)}</p>
-            <p>Severity: {event.severityLevel}</p>
-            <p>Description: {event.description}</p>
+            {/* Display student details */}
+            <p>Name: {student.name}</p>
+            <p>Roll Number: {student.rollNumber}</p>
+            <p>Department: {student.department}</p>
+            <p>Batch: {student.batch}</p>
+            <p>Date of Joining: {formatDate(student.dateOfJoining)}</p>
+            <p>Contact Information: {student.contactInfo}</p> {/* Add this line */}
 
             <button onClick={handleSubmit}>Delete</button>
         </div>

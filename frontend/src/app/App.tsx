@@ -1,113 +1,128 @@
-import React, { useState, useEffect } from 'react';
-import './App.css';
+import React, { useState, useEffect } from "react";
 import { Route, Routes, Navigate } from "react-router-dom";
+import axios from "axios";
+import "./App.css";
 import HomePage from "../pages/HomePage";
-import IncidentReportingPage from "../pages/IncidentReportingPage";
-import CollaborationPage from "../pages/CollaborationPage";
-import CommunicationCenterPage from "../pages/CommunicationCenterPage";
+import Navbar from "../components/Navbar";
+import CreateContentBox from "../content-box/CreateContentBox";
+import ReadContentBox from "../content-box/ReadContentBox";
+import UpdateContentBox from "../content-box/UpdateContentBox";
+import DeleteContentBox from "../content-box/DeleteContentBox";
+import Meals from "../pages/Meals";
+import { Student } from "../entities/Student";
 import AboutPage from "../pages/AboutPage";
-import Navbar from "../components/Navbar"; // Import DisasterEvent from here
-import { Link } from 'react-router-dom';
-import UpdateContentBox from "../content-box/UpdateContentBox"; //Import UpdateContentBox
-import { DisasterEvent } from '../entities/DisasterEvent'; // Import the DisasterEvent interface
-
 
 const App: React.FC = () => {
-    const [disasterEvents, setDisasterEvents] = useState<DisasterEvent[]>([]);
-    const [selectedEvent, setSelectedEvent] = useState<DisasterEvent | null>(null);
-    const [editing, setEditing] = useState(false);
+    const [students, setStudents] = useState<Student[]>([]);
+    const [selectedStudent, setSelectedStudent] = useState<Student | null>(null);
+    const [isEditing, setIsEditing] = useState(false);
     const [errorMessage, setErrorMessage] = useState('');
 
     useEffect(() => {
-        fetchDisasterEvents();
+        fetchStudents();
     }, []);
 
-    const fetchDisasterEvents = () => {
-        setErrorMessage('');
-        fetch('http://localhost:8080/api/disaster-events')
-            .then(res => {
-                if (!res.ok) {
-                    throw new Error('Network response was not ok.');
-                }
-                return res.json();
-            })
-            .then((data: DisasterEvent[]) => setDisasterEvents(data))
-            .catch(handleFetchError);
-    };
-
-    const handleCreateSubmit = async (newDisasterEvent: Omit<DisasterEvent, 'id'>) => {
+    const fetchStudents = async () => {
         try {
-            const response = await fetch('http://localhost:8080/api/disaster-events', {
-                method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify(newDisasterEvent), // Fix: Remove extra variable
-            });
-
-            if (response.ok) {
-                const createdEvent: DisasterEvent = await response.json();
-                setDisasterEvents([createdEvent, ...disasterEvents]);
-                setErrorMessage('');
-            } else {
-                throw new Error('Failed to report disaster event.');
-            }
-
+            const response = await axios.get('http://localhost:8080/api/students');
+            setStudents(response.data);
+            setErrorMessage('');
         } catch (error) {
-            console.error('Error reporting disaster event:', error);
-            setErrorMessage('An error occurred while reporting the disaster event.');
+            console.error('Error fetching students:', error);
+            setErrorMessage('An error occurred while fetching student data.');
         }
     };
 
-    const handleEditClick = (event: DisasterEvent) => {
-        setSelectedEvent(event);
-        setEditing(true);
-    };
-
-    const handleUpdateSubmit = (updatedEvent: DisasterEvent) => {
-        fetch(`http://localhost:8080/api/disaster-events/${updatedEvent.id}`, {
-            method: 'PUT',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify(updatedEvent),
-        })
-            .then(res => res.json())
-            .then((updatedEventFromServer: DisasterEvent) => {
-                setDisasterEvents(disasterEvents.map(e => e.id === updatedEventFromServer.id ? updatedEventFromServer : e));
-                setEditing(false);
-                setSelectedEvent(null);
+    const handleCreateSubmit = async (newStudent: Omit<Student, 'id'>) => {
+        try {
+            const response = await axios.post('http://localhost:8080/api/students', newStudent);
+            if (response.status === 201) {
+                setStudents([response.data, ...students]); // Add new student to list
                 setErrorMessage('');
-            })
-            .catch(handleFetchError);
+            } else {
+                throw new Error('Failed to create student.');
+            }
+        } catch (error) {
+            console.error('Error creating student:', error);
+            setErrorMessage('An error occurred while creating the student.');
+        }
     };
 
-    const handleDeleteClick = (id: number) => {
-        fetch(`http://localhost:8080/api/disaster-events/${id}`, { method: 'DELETE' })
-            .then(() => {
-                setDisasterEvents(disasterEvents.filter(e => e.id !== id));
+    const handleUpdateSubmit = async (updatedStudent: Student) => {
+        try {
+            const initialAttendance = selectedStudent?.totalAttendance || 0; // Default to 0 if not found
+            const response = await axios.put(
+                `http://localhost:8080/api/students/${updatedStudent.id}/attendance`,
+                null,
+                {
+                    params: {
+                        isPresent: updatedStudent.totalAttendance > initialAttendance,
+                    },
+                }
+            );
+        } catch (error) {
+            console.error('Error updating student attendance:', error);
+            setErrorMessage('An error occurred while updating attendance.');
+        }
+    };
+
+    const handleEditClick = (student: Student) => {
+        setSelectedStudent(student);
+        setIsEditing(true);
+    };
+
+    const handleDeleteClick = async (id: number) => {
+        try {
+            const response = await axios.delete(`http://localhost:8080/api/students/${id}`);
+            if (response.status === 204) { // No Content on successful delete
+                setStudents(students.filter(e => e.id !== id));
                 setErrorMessage('');
-            })
-            .catch(handleFetchError);
+            } else {
+                throw new Error('Failed to delete student.');
+            }
+        } catch (error) {
+            console.error('Error deleting student:', error);
+            setErrorMessage('An error occurred while deleting the student.');
+        }
     };
 
-    const handleFetchError = (error: Error) => {
-        console.error('Fetch Error:', error);
-        setErrorMessage('An error occurred while communicating with the server.');
-    };
     return (
         <div className="app">
             <Navbar />
+
             <main className="app-container">
-                {/* Display Error Message if any */}
                 {errorMessage && <div className="error-message">{errorMessage}</div>}
 
                 <Routes>
                     <Route path="/" element={<HomePage />} />
-                    <Route path="/report-incident" element={
-                        <IncidentReportingPage
-                        />}
+                    <Route path="/add-student" element={<CreateContentBox onSubmit={handleCreateSubmit} />} />
+                    <Route
+                        path="/take-attendance"
+                        element={
+                            <div className="page-content">
+                                {/* Conditionally render UpdateContentBox only for the selected student */}
+                                {students.map((student) => (
+                                    <React.Fragment key={student.id}>
+                                        <ReadContentBox
+                                            student={student}
+                                            onEdit={() => handleEditClick(student)}
+                                            onDelete={() => handleDeleteClick(student.id)}
+                                        />
+
+                                        {selectedStudent?.id === student.id && isEditing ? (
+                                            <UpdateContentBox student={student} onSubmit={handleUpdateSubmit} />
+                                        ) : null}
+                                        {selectedStudent?.id === student.id && !isEditing ? (
+                                            <DeleteContentBox student={student} onSubmit={handleDeleteClick} />
+                                        ) : null}
+                                    </React.Fragment>
+                                ))}
+                            </div>
+                        }
                     />
-                    <Route path="/collaborate" element={<CollaborationPage />} />
-                    <Route path="/contact" element={<CommunicationCenterPage />} />
+                    <Route path="/meals" element={<Meals />} />
                     <Route path="/about-us" element={<AboutPage />} />
-                    <Route path="*" element={<Navigate to="/" />} /> {/* Redirect for unknown paths */}
+                    <Route path="*" element={<Navigate to="/" />} />
                 </Routes>
             </main>
         </div>
