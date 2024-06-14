@@ -2,48 +2,47 @@ package com.sergio.crud.backend.entities;
 
 import jakarta.persistence.*;
 import lombok.*;
-
-import java.time.LocalDate;
-
 import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.annotation.LastModifiedDate;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
 import java.time.LocalDateTime;
+import java.util.Date;
 
 @Entity
-@Table(name = "disaster_event")
+@Table(name = "student")
 @Getter
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
 @EntityListeners(AuditingEntityListener.class)
-
-public class DisasterEvent {
-
+public class Student {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;  // Assuming ID is a Long in your database
+    private Long id;
 
     @Column(nullable = false)
     private String name;
 
-    @Column(nullable = false)
-    private String type;
+    @Column(nullable = false, unique = true) // Roll number should be unique
+    private String rollNumber;
+
+    @Column(nullable = true) // Optional
+    private String department;
+
+    @Column(nullable = true) // Optional
+    private String batch;
 
     @Column(nullable = false)
-    private String address; // Use address to match frontend
+    private Date dateOfJoining;
 
     @Column(nullable = false)
-    private LocalDate date;
+    private String contactInfo;
 
-    @Column(nullable = false)
-    private String severityLevel;
-
-    @Column(length = 1000)
-    private String description;
+    @Column(nullable = false, columnDefinition = "int default 0") // Default to 0
+    private int totalAttendance;
 
     @CreatedDate
     private LocalDateTime created;
