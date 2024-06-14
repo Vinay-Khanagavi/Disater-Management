@@ -91,7 +91,7 @@ const CreateContentBox: React.FC<CreateContentBoxProps> = ({ onSubmit }) => {
                 value={student.dateOfJoining.toISOString().split("T")[0]} // Format date
                 onChange={handleChange}
             />
-
+const for
             <input
                 type="text"
                 name="contactInfo"

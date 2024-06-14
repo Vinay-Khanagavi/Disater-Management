@@ -1,0 +1,41 @@
+/* AboutPage.css */
+.about-page-container {
+    max-width: 960px;
+    margin: 0 auto;
+    padding: 20px;
+}
+
+/* Section Styling */
+.about-intro, .our-story, .our-values, .our-team, .our-approach, .impact-stories, .gallery, .awards, .contact-info {
+    margin-bottom: 30px;
+}
+
+/* Values List Styling */
+.values-list {
+    display: flex;
+    flex-wrap: wrap; /* Allow values to wrap to the next line */
+    gap: 15px;
+}
+
+.value-item {
+    background-color: #007bff; /* Example background color */
+    color: white;
+    padding: 10px 15px;
+    border-radius: 5px;
+}
+
+/* Call to Action Styling */
+.call-to-action {
+    text-align: center;
+}
+
+.call-to-action button {
+    background-color: #007bff;
+    color: white;
+    padding: 10px 20px;
+    border: none;
+    margin: 0 10px; /* Add margin between buttons */
+    cursor: pointer;
+}
+
+/* ... add more styles as needed ... */

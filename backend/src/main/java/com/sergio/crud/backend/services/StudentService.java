@@ -1,10 +1,10 @@
 package com.sergio.crud.backend.services;
 
-import com.sergio.crud.backend.dtos.DisasterEventDto;
-import com.sergio.crud.backend.entities.DisasterEvent;
+import com.sergio.crud.backend.dtos.StudentDto;
+import com.sergio.crud.backend.entities.Student;
 import com.sergio.crud.backend.exceptions.AppException;
-import com.sergio.crud.backend.mappers.DisasterEventMapper;
-import com.sergio.crud.backend.repositories.DisasterEventRepository;
+import com.sergio.crud.backend.mappers.StudentMapper;
+import com.sergio.crud.backend.repositories.StudentRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
@@ -12,62 +12,41 @@ import org.springframework.stereotype.Service;
 import java.util.List;
 
 @Service
-@RequiredArgsConstructor
-public class DisasterEventService {
+@RequiredArgsConstructor // This will handle creating the constructor
+public class StudentService {
 
-    private final DisasterEventRepository disasterEventRepository;
-    private final DisasterEventMapper disasterEventMapper;
+    private final StudentRepository studentRepository;
+    private final StudentMapper studentMapper;
 
-    public List<DisasterEventDto> getAllDisasterEvents() {
-        return disasterEventMapper.toDisasterEventDtos(disasterEventRepository.findAll());
+    // *** REMOVE ANY OTHER CONSTRUCTORS FROM THIS CLASS ***
+
+    public List<StudentDto> getAllStudents() {
+        List<Student> students = studentRepository.findAll();
+        return studentMapper.toStudentDtos(students);
     }
 
-    public DisasterEventDto createDisasterEvent(DisasterEventDto disasterEventDto) {
-        DisasterEvent disasterEvent = disasterEventMapper.toDisasterEvent(disasterEventDto);
-        DisasterEvent savedEvent = disasterEventRepository.save(disasterEvent);
-        return disasterEventMapper.toDisasterEventDto(savedEvent);
+    public StudentDto createStudent(StudentDto studentDto) {
+        Student student = studentMapper.toStudent(studentDto);
+        Student savedStudent = studentRepository.save(student);
+        return studentMapper.toStudentDto(savedStudent);
     }
 
-    public DisasterEventDto getDisasterEvent(Long id) {
-        DisasterEvent event = disasterEventRepository.findById(id)
-                .orElseThrow(() -> new AppException("Disaster event not found", HttpStatus.NOT_FOUND));
-        return disasterEventMapper.toDisasterEventDto(event);
+    public StudentDto getStudentById(Long id) {
+        Student student = studentRepository.findById(id)
+                .orElseThrow(() -> new AppException("Student not found", HttpStatus.NOT_FOUND));
+        return studentMapper.toStudentDto(student);
     }
 
-    public DisasterEventDto updateDisasterEvent(Long id, DisasterEventDto eventDto) {
-        DisasterEvent event = disasterEventRepository.findById(id)
-                .orElseThrow(() -> new AppException("Disaster event not found", HttpStatus.NOT_FOUND));
+    public StudentDto updateStudent(Long id, StudentDto studentDto) {
+        Student existingStudent = studentRepository.findById(id)
+                .orElseThrow(() -> new AppException("Student not found", HttpStatus.NOT_FOUND));
 
-        disasterEventMapper.updateDisasterEventFromDto(eventDto, event); // Use MapStruct for updating
-
-        DisasterEvent savedEvent = disasterEventRepository.save(event);
-        return disasterEventMapper.toDisasterEventDto(savedEvent);
+        studentMapper.updateStudentFromDto(studentDto, existingStudent);
+        Student updatedStudent = studentRepository.save(existingStudent);
+        return studentMapper.toStudentDto(updatedStudent);
     }
 
-    public DisasterEventDto partiallyUpdateDisasterEvent(Long id, DisasterEventDto eventDto) {
-        return disasterEventRepository.findById(id)
-                .map(existingEvent -> {
-                    if (eventDto.getType() != null) {
-                        existingEvent.setType(eventDto.getType());
-                    }
-                    if (eventDto.getAddress() != null) {
-                        existingEvent.setAddress(eventDto.getAddress());
-                    }
-                    if (eventDto.getDate() != null) {
-                        existingEvent.setDate(eventDto.getDate()); // Assign directly (both are LocalDate)
-                    }
-                    if (eventDto.getSeverityLevel() != null) {
-                        existingEvent.setSeverityLevel(eventDto.getSeverityLevel());
-                    }
-                    if (eventDto.getDescription() != null) {
-                        existingEvent.setDescription(eventDto.getDescription());
-                    }
-                    return disasterEventMapper.toDisasterEventDto(disasterEventRepository.save(existingEvent));
-                })
-                .orElseThrow(() -> new AppException("Disaster event not found", HttpStatus.NOT_FOUND));
-    }
-
-    public void deleteDisasterEvent(Long id) {
-        disasterEventRepository.deleteById(id);
+    public void deleteStudent(Long id) {
+        studentRepository.deleteById(id);
     }
 }

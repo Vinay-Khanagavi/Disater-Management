@@ -1,53 +1,46 @@
-package com.sergio.crud.backend.services; // Make sure the package is correct
+package com.sergio.crud.backend.controllers;
 
 import com.sergio.crud.backend.dtos.StudentDto;
-import com.sergio.crud.backend.entities.Student;
-import com.sergio.crud.backend.mappers.StudentMapper;
-import com.sergio.crud.backend.repositories.StudentRepository;
+import com.sergio.crud.backend.services.StudentService;
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
-import org.springframework.stereotype.Service;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.*;
 
+import java.net.URI;
 import java.util.List;
-import java.util.Optional;
 
-@Service
+@RestController
+@RequestMapping("/api/students")
 @RequiredArgsConstructor
-public class StudentService {
+public class StudentController {
 
-    private final StudentRepository studentRepository;
-    private final StudentMapper studentMapper;
+    private final StudentService studentService; // You need this field
 
-    public StudentService(StudentRepository studentRepository, StudentMapper studentMapper) {
-        this.studentRepository = studentRepository;
-        this.studentMapper = studentMapper;
+    @GetMapping
+    public ResponseEntity<List<StudentDto>> getAllStudents() {
+        return ResponseEntity.ok(studentService.getAllStudents());
     }
 
-    public List<StudentDto> getAllStudents() {
-        List<Student> students = studentRepository.findAll();
-        return studentMapper.toStudentDtos(students);
+    @PostMapping
+    public ResponseEntity<StudentDto> createStudent(@Valid @RequestBody StudentDto studentDto) {
+        StudentDto createdStudent = studentService.createStudent(studentDto);
+        return ResponseEntity.created(URI.create("/api/students/" + createdStudent.getId())).body(createdStudent);
     }
 
-    public StudentDto createStudent(StudentDto studentDto) {
-        Student student = studentMapper.toStudent(studentDto);
-        Student savedStudent = studentRepository.save(student);
-        return studentMapper.toStudentDto(savedStudent);
+    @GetMapping("/{id}")
+    public ResponseEntity<StudentDto> getStudent(@PathVariable Long id) {
+        return ResponseEntity.ok(studentService.getStudentById(id));
     }
 
-    public StudentDto getStudentById(Long id) {
-        Optional<Student> student = studentRepository.findById(id);
-        return student.map(studentMapper::toStudentDto).orElseThrow(() -> new RuntimeException("Student not found"));
+    @PutMapping("/{id}")
+    public ResponseEntity<StudentDto> updateStudent(@PathVariable Long id, @Valid @RequestBody StudentDto studentDto) {
+        return ResponseEntity.ok(studentService.updateStudent(id, studentDto));
     }
 
-    public StudentDto updateStudent(Long id, StudentDto studentDto) {
-        Student existingStudent = studentRepository.findById(id)
-                .orElseThrow(() -> new RuntimeException("Student not found"));
-
-        studentMapper.updateStudentFromDto(studentDto, existingStudent);
-        Student updatedStudent = studentRepository.save(existingStudent);
-        return studentMapper.toStudentDto(updatedStudent);
-    }
-
-    public void deleteStudent(Long id) {
-        studentRepository.deleteById(id);
+    @DeleteMapping("/{id}")
+    public ResponseEntity<Void> deleteStudent(@PathVariable Long id) {
+        studentService.deleteStudent(id);
+        return ResponseEntity.noContent().build();
     }
 }

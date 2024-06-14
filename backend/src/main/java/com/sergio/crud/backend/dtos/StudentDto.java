@@ -2,7 +2,7 @@ package com.sergio.crud.backend.dtos;
 
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
-import jakarta.validation.constraints.Pattern;
+import jakarta.validation.constraints.NotNull;
 import lombok.*;
 
 import java.util.Date;
@@ -20,7 +20,6 @@ public class StudentDto {
     private String name;
 
     @NotBlank(message = "Roll number is mandatory")
-    @Pattern(regexp = "\\d+", message = "Roll number must be a number")
     private String rollNumber;
 
     @NotBlank(message = "Department is mandatory")
@@ -35,9 +34,13 @@ public class StudentDto {
     @NotBlank(message = "Contact Info is mandatory")
     private String contactInfo;
 
-    @NotBlank(message = "Total Attendance is mandatory")
-    private int totalAttendance;
+    @NotNull(message = "Total attendance is required") // Correct validation for Integer
+    private Integer totalAttendance;
 
     @Email(message = "Please provide a valid email address")
     private String email;
+
+    public int getTotalAttendance() {
+        return this.totalAttendance;
+    }
 }

@@ -26,13 +26,13 @@ public class Student {
     @Column(nullable = false)
     private String name;
 
-    @Column(nullable = false, unique = true) // Roll number should be unique
+    @Column(nullable = false, unique = true)
     private String rollNumber;
 
-    @Column(nullable = true) // Optional
+    @Column(nullable = true)
     private String department;
 
-    @Column(nullable = true) // Optional
+    @Column(nullable = true)
     private String batch;
 
     @Column(nullable = false)
@@ -41,7 +41,7 @@ public class Student {
     @Column(nullable = false)
     private String contactInfo;
 
-    @Column(nullable = false, columnDefinition = "int default 0") // Default to 0
+    @Column(nullable = false, columnDefinition = "int default 0")
     private int totalAttendance;
 
     @CreatedDate
